@@ -32,11 +32,10 @@ jobs:
       - name: Download mihomo
         run: |
           $mihomoVersion = "v1.19.26"
-          $url = "https://github.com/MetaCubeX/mihomo/releases/download/${mihomoVersion}/mihomo-windows-amd64-${mihomoVersion}.gz"
-          Invoke-WebRequest -Uri $url -OutFile "mihomo.gz"
-          # Use 7-zip to extract gz
-          7z x mihomo.gz -omihomo_tmp
-          Move-Item mihomo_tmp\mihomo src-tauri\resources\mihomo.exe
+          $url = "https://github.com/MetaCubeX/mihomo/releases/download/${mihomoVersion}/mihomo-windows-amd64-${mihomoVersion}.zip"
+          Invoke-WebRequest -Uri $url -OutFile "mihomo.zip"
+          Expand-Archive -Path "mihomo.zip" -DestinationPath "mihomo_tmp"
+          Move-Item mihomo_tmp\mihomo-windows-amd64.exe src-tauri\resources\mihomo.exe
 
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
