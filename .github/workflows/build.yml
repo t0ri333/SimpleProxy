@@ -1,0 +1,56 @@
+name: Build SimpleProxy
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Download mihomo
+        run: |
+          $mihomoVersion = "v1.19.26"
+          $url = "https://github.com/MetaCubeX/mihomo/releases/download/${mihomoVersion}/mihomo-windows-amd64-${mihomoVersion}.gz"
+          Invoke-WebRequest -Uri $url -OutFile "mihomo.gz"
+          # Use 7-zip to extract gz
+          7z x mihomo.gz -omihomo_tmp
+          Move-Item mihomo_tmp\mihomo src-tauri\resources\mihomo.exe
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'SimpleProxy ${{ github.ref_name }}'
+          releaseBody: 'SimpleProxy - 一键翻墙，给爸妈用的 VPN 客户端'
+          releaseDraft: false
+          prerelease: false
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimpleProxy-Windows
+          path: src-tauri/target/release/bundle/msi/*.msi

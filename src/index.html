@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleProxy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div id="statusBar" class="status-bar status-off">
+        <span class="status-dot"></span>
+        <span id="statusText">未连接</span>
+    </div>
+
+    <!-- 拖拽区域 -->
+    <div id="dropZone" class="drop-zone">
+        <div class="drop-zone-content">
+            <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p class="drop-text">把配置文件拖到这里</p>
+            <p class="drop-hint">.yaml 文件</p>
+        </div>
+    </div>
+
+    <!-- 已加载配置后的界面 -->
+    <div id="configLoaded" class="config-loaded" style="display: none;">
+        <div class="config-status">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>配置已就绪</span>
+        </div>
+    </div>
+
+    <!-- 模式切换 -->
+    <div class="mode-switch">
+        <button id="smartMode" class="mode-btn active" onclick="setMode('rule')">
+            智能模式
+        </button>
+        <button id="globalMode" class="mode-btn" onclick="setMode('global')">
+            全局模式
+        </button>
+    </div>
+
+    <!-- 连接按钮 -->
+    <button id="connectBtn" class="connect-btn" onclick="toggleConnection()">
+        <span id="btnText">打 开</span>
+    </button>
+
+    <!-- 配置名称 -->
+    <div id="configName" class="config-name" style="display: none;">
+        当前：<span id="configNameText"></span>
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="footer-hint">
+        如有问题，请联系子女
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
